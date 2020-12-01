@@ -19,6 +19,13 @@ defmodule MyGenericServer do
     server_pid = spawn_link(fn-> loop({callback,state}) end)
     {:ok,server_pid}
   end
+
+  def start(_type, _args) do
+    import Supervisor.Spec
+    children = [worker(Server.Database, [0])]
+    opts = [strategy: :one_for_one]
+    Supervisor.start_link(children, opts)
+  end
 end
 
 defmodule AccountServer do

@@ -12,6 +12,13 @@ defmodule KV do
       :world
 
   """
+
+  use Application
+
+  def start(_type, _args) do
+    KV.Supervisor.start_link
+  end
+
   def hello do
     :world
   end

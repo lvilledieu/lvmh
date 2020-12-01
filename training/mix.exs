@@ -3,7 +3,7 @@ defmodule Training.MixProject do
 
   def project do
     [
-      app: :training,
+      app: :tuto_kbrw_stack,
       version: "0.1.0",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
