@@ -1,13 +1,11 @@
-defmodule Serv_supervisor do
+defmodule Server.Serv_supervisor do
   use Supervisor
-  def init(_) do
-    children = [Server.Database]
-    supervise(
-        Enum.map(children, &worker(&1, [])),
-        strategy: :one_for_one
-        )
+  def init(children) do
+    Supervisor.init(children, strategy: :one_for_one)
     end
-    def start_link do
-      {:ok, _} = Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+
+    def start_link(children, opts) do
+      {:ok, _} = Supervisor.start_link([children, [], name: __MODULE__], opts)
+      init(children)
     end
 end

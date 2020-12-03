@@ -68,7 +68,7 @@ defmodule KV.Registry do
   def init({table, events, buckets}) do
     # 3. We have replaced the names HashDict by the ETS table
     ets  = :ets.new(table, [:named_table, read_concurrency: true])
-    refs = HashDict.new
+    refs = Map.new
     {:ok, %{names: ets, refs: refs, events: events, buckets: buckets}}
   end
 
@@ -145,7 +145,7 @@ end
       :error ->
         {:ok, pid} = KV.Bucket.Supervisor.start_bucket(state.buckets)
         ref = Process.monitor(pid)
-        refs = HashDict.put(state.refs, ref, name)
+        refs = Map.put(state.refs, ref, name)
         :ets.insert(state.names, {name, pid})
         GenEvent.sync_notify(state.events, {:create, name, pid})
         {:reply, pid, %{state | refs: refs}} # Reply with pid
