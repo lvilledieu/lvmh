@@ -1,15 +1,18 @@
 defmodule Json_Test do
   use ExUnit.Case, async: true
 
-  setup do
-    {:ok, bucket} = KV.Bucket.start_link
-    {:ok, bucket: bucket}
-  end
+  # doctest(Server.JsonLoader)
 
-  test "decode json file", %{bucket: bucket} do
-    assert KV.Bucket.get(bucket, "milk") == nil
+  # setup do
+  #   {:ok, filename} = "files/orders_chunk0.json"
+  #   {:ok, filename: filename}
+  # end
 
-    KV.Bucket.put(bucket, "milk", 3)
-    assert KV.Bucket.get(bucket, "milk") == 3
-  end
+  # test "decode json file", {filename: filename} do
+  #   Server.JsonLoader.
+  #   assert KV.Bucket.get(bucket, "milk") == nil
+
+  #   KV.Bucket.put(bucket, "milk", 3)
+  #   assert KV.Bucket.get(bucket, "milk") == 3
+  # end
 end

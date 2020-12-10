@@ -14,16 +14,19 @@ defmodule Training.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {Training.Application, []}
+      extra_applications: [:logger, :cowboy],
+      mod: {TutoKBRWStack, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:poison, "~> 4.0"}
-      # {:dep_from_hexpm, "~> 0.3.0"},
+      {:poison, "~> 3.1"},
+      {:cowboy, "~> 1.1.2"},
+      {:plug, "~> 1.7"},
+      {:plug_cowboy, "~> 1.0"},
+      {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
     ]
   end
