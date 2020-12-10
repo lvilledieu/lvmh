@@ -6,6 +6,7 @@ defmodule Server.Serv_supervisor do
 
     def start_link(children, opts) do
       {:ok, _} = Supervisor.start_link([children, name: __MODULE__], opts)
-      #init(children)
+
+      # Supervisor.init(children)
     end
 end
