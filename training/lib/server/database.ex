@@ -30,7 +30,7 @@ defmodule Server.Database do
   end
 
   def handle_cast({:create, key, initial_value}, _from, table) do
-    case :ets.insert_new(table, {key, initial_value}, [:bag]) do
+    case :ets.insert_new(table, {key, initial_value}) do
     true -> {:reply, :ok, table}
     false -> {:reply, {:error, :keyalreadyexist}, table}
     end
@@ -38,7 +38,7 @@ defmodule Server.Database do
 
   def handle_call({:read, key}, _from, table) do
     case :ets.lookup(table, key) do
-    [{^key, value}] -> {:reply, {:ok, values}, table}
+    [{^key, value}] -> {:reply, {:ok, value}, table}
     [] -> {:reply, {:error, :KeyNotFoud}, table}
     end
   end
@@ -46,7 +46,7 @@ defmodule Server.Database do
   def handle_call({:update, key, values}, _from, table) do
     with [{^key, _val }] <- :ets.lookup(table, key),
     true <- :ets.insert_new(table, values) do
-      {:reply, {:ok, value}}
+      {:reply, {:ok, values}}
     else
       [] -> {:reply, {:error, :KeyNotFoud}, table}
     end
@@ -55,7 +55,7 @@ defmodule Server.Database do
   def handle_cast({:delete, key}, _from, table) do
     with [{^key, _val }] <- :ets.lookup(table, key),
     true <- :ets.delete(table, key) do
-      {:reply, {:ok, value}}
+      {:reply, {:ok, table}}
     else
       [] -> {:reply, {:error, :KeyNotFoud}, table}
     end
@@ -80,7 +80,7 @@ defmodule Server.Database do
     names  = :ets.new(:database, [:named_table, read_concurrency: true])
     {:ok, parsefile} = Server.JsonLoader.load_to_database(jsonfile)
     IO.inspect(parsefile)
-    Enum.each(parsefile, fn element when element <> %{order_id: nil, items: nil} ->
+    Enum.each(parsefile, fn element = %{order_id: order_id, items: items} when element <> %{order_id: nil, items: nil} ->
       case element do
         %{order_id: order_id, items: items}->
           :ets.insert_new(names, {order_id, items})
@@ -159,7 +159,7 @@ defmodule Server.Database do
 
   # end
 
-  def search(database, criteria) do
+  def handle_call({:search, database, criteria}) do
 
    [{key , value}] =  :ets.match_object(:database, {:"$1", :_, :"$3"})
 
